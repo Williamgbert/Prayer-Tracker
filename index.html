@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prayer Tracker - Small Group Leader</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlByYXllciBUcmFja2VyIiwKICAic2hvcnRfbmFtZSI6ICJQcmF5ZXJUcmFja2VyIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJ0aGVtZV9jb2xvciI6ICIjNjM2NmYxIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTkRnaUlHaGxhV2RvZEQwaU5EZ2lJSFpwWlhkQ2IzZzlJakFnTUNBME9DQTBPQ0lnWm1sc2JEMGlJelkyTkRabU1TSStQSEJoZEdnaVpEMGlUVEkwSURJdU5USmpOaTR6TXpZZ01DQXRNUZR4TkMweUxqUTJVelE0SURJaU1UWXVNRGd0TlM0ek5UTXROaTQwTkRjdE1URXVNVE11TXpRdE1UVXVORGd0TVRRdE1UWXVNRGhmVXpNM0xqTTFOUzAzTGpreU16Z3ROUzR6TlRNdE1URXVNVGd0TVRRdE1UUXRTREU0SURJdU5UV2lJR1pwYkd3OUlpTTJNelkyWmpFaUx6NDhMM04yWno0PSIsCiAgICAgICJzaXplcyI6ICI0OHg0OCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-hover: #5855eb;
+            --secondary-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --border-color: #e5e7eb;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --border-color: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--bg-primary);
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .quick-add {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .quick-add h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .search-bar {
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            background: var(--bg-primary);
+            font-size: 1rem;
+        }
+
+        .prayer-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+
+        .prayer-card {
+            background: var(--bg-primary);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.2s ease;
+        }
+
+        .prayer-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .prayer-card.answered {
+            border-left-color: var(--secondary-color);
+        }
+
+        .prayer-card.praise {
+            border-left-color: var(--warning-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .status-icon {
+            font-size: 1.2rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .member-name {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .prayer-text {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .date {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .prayer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-actions {
+                flex-wrap: wrap;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .export-import {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .export-import h3 {
+            margin-bottom: 1rem;
+        }
+
+        .export-import-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                🙏 Prayer Tracker
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-icon btn-secondary" onclick="toggleTheme()" title="Toggle theme">
+                    🌙
+                </button>
+                <button class="btn btn-secondary" onclick="showSettings()">
+                    ⚙️ Settings
+                </button>
+                <button class="btn btn-primary" onclick="showQuickAdd()">
+                    ➕ Add Request
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Stats Dashboard -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activePrayers">0</div>
+                <div class="stat-label">Active Prayers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="answeredPrayers">0</div>
+                <div class="stat-label">Answered</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="praisesCount">0</div>
+                <div class="stat-label">Praises</div>
+            </div>
+        </div>
+
+        <!-- Quick Add Form -->
+        <div class="quick-add" id="quickAddForm">
+            <h3>Add Prayer Request</h3>
+            <form id="prayerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="memberName">Member Name</label>
+                        <input type="text" id="memberName" list="membersList" required>
+                        <datalist id="membersList"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="">Select category</option>
+                            <option value="health">Health</option>
+                            <option value="family">Family</option>
+                            <option value="work">Work</option>
+                            <option value="spiritual">Spiritual</option>
+                            <option value="praise">Praise</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="requestText">Prayer Request</label>
+                    <textarea id="requestText" placeholder="Enter prayer request details..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="praying">Praying</option>
+                            <option value="answered">Answered</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;">
+                            Add Request
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search prayer requests, members, or categories...">
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-filter="all">All Requests</button>
+            <button class="tab" data-filter="this-week">This Week</button>
+            <button class="tab" data-filter="praying">Still Praying</button>
+            <button class="tab" data-filter="answered">Answered</button>
+            <button class="tab" data-filter="praise">Praises</button>
+        </div>
+
+        <!-- Prayer Cards Container -->
+        <div class="prayer-grid" id="prayerGrid">
+            <!-- Prayer cards will be dynamically generated here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state hidden" id="emptyState">
+            <div class="empty-state-icon">🙏</div>
+            <h3>No prayer requests yet</h3>
+            <p>Add your first prayer request to get started</p>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal hidden" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Prayer Request</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="editForm">
+                <div class="form-group">
+                    <label for="editMemberName">Member Name</label>
+                    <input type="text" id="editMemberName" list="editMembersList" required>
+                    <datalist id="editMembersList"></datalist>
+                </div>
+                <div class="form-group">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory" required>
+                        <option value="health">Health</option>
+                        <option value="family">Family</option>
+                        <option value="work">Work</option>
+                        <option value="spiritual">Spiritual</option>
+                        <option value="praise">Praise</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editRequestText">Prayer Request</label>
+                    <textarea id="editRequestText" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editStatus">Status</label>
+                    <select id="editStatus">
+                        <option value="praying">Praying</option>
+                        <option value="answered">Answered</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editNotes">Notes</label>
+                    <textarea id="editNotes" placeholder="Add follow-up notes..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editAnswerDate">Answer Date (if answered)</label>
+                    <input type="date" id="editAnswerDate">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal hidden" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="export-import">
+                <h3>Data Management</h3>
+                <div class="export-import-actions">
+                    <button class="btn btn-secondary" onclick="exportData()">
+                        📥 Export Data
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+                        📤 Import Data
+                    </button>
+                    <input type="file" id="importFile" class="file-input" accept=".json" onchange="importData(event)">
+                    <button class="btn btn-secondary" onclick="clearAllData()">
+                        🗑️ Clear All Data
+                    </button>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary);">
+                    All data is stored locally in your browser. Export your data regularly for backup.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let prayers = JSON.parse(localStorage.getItem('prayers') || '[]');
+        let currentFilter = 'all';
+        let currentEditId = null;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            updateMembersList();
+            renderPrayers();
+            updateStats();
+            setupEventListeners();
+            
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        });
+
+        function initializeTheme() {
+            if (isDarkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                renderPrayers(searchTerm);
+            });
+
+            // Tab filtering
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderPrayers();
+                });
+            });
+
+            // Form submissions
+            document.getElementById('prayerForm').addEventListener('submit', addPrayer);
+            document.getElementById('editForm').addEventListener('submit', updatePrayer);
+        }
+
+        function addPrayer(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const prayer = {
+                id: Date.now().toString(),
+                memberName: document.getElementById('memberName').value,
+                category: document.getElementById('category').value,
+                requestText: document.getElementById('requestText').value,
+                status: document.getElementById('status').value,
+                dateAdded: new Date().toISOString(),
+                notes: '',
+                answerDate: null
+            };
+
+            prayers.push(prayer);
+            savePrayers();
+            updateMembersList();
+            renderPrayers();
+            updateStats();
+            
+            // Reset form
+            e.target.reset();
+            
+            showNotification('Prayer request added successfully!');
+        }
+
+        function updatePrayer(e) {
+            e.preventDefault();
+            
+            const prayer = prayers.find(p => p.id === currentEditId);
+            if (!prayer) return;
+
+            prayer.memberName = document.getElementById('editMemberName').value;
+            prayer.category = document.getElementById('editCategory').value;
+            prayer.requestText = document.getElementById('editRequestText').value;
+            prayer.status = document.getElementById('editStatus').value;
+            prayer.notes = document.getElementById('editNotes').value;
+            prayer.answerDate = document.getElementById('editAnswerDate').value || null;
+
+            savePrayers();
+            renderPrayers();
+            updateStats();
+            closeModal();
+            
+            showNotification('Prayer request updated successfully!');
+        }
+
+        function renderPrayers(searchTerm = '') {
+            const grid = document.getElementById('prayerGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            let filteredPrayers = prayers;
+
+            // Apply search filter
+            if (searchTerm) {
+                filteredPrayers = filteredPrayers.filter(prayer => 
+                    prayer.memberName.toLowerCase().includes(searchTerm) ||
+                    prayer.requestText.toLowerCase().includes(searchTerm) ||
+                    prayer.category.toLowerCase().includes(searchTerm) ||
+                    (prayer.notes && prayer.notes.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            // Apply tab filter
+            if (currentFilter !== 'all') {
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+                switch (currentFilter) {
+                    case 'this-week':
+                        filteredPrayers = filteredPrayers.filter(prayer => 
+                            new Date(prayer.dateAdded) >= oneWeekAgo
+                        );
+                        break;
+                    case 'praying':
+                        filteredPrayers = filteredPrayers.filter(prayer => 
+                            prayer.status === 'praying'
+                        );
+                        break;
+                    case 'answered':
+                        filteredPrayers = filteredPrayers.filter(prayer => 
+                            prayer.status === 'answered'
+                        );
+                        break;
+                    case 'praise':
+                        filteredPrayers = filteredPrayers.filter(prayer => 
+                            prayer.category === 'praise'
+                        );
+                        break;
+                }
+            }
+
+            // Sort by date (newest first)
+            filteredPrayers.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+
+            if (filteredPrayers.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                grid.innerHTML = filteredPrayers.map(prayer => createPrayerCard(prayer)).join('');
+            }
+        }
+
+        function createPrayerCard(prayer) {
+            const statusIcons = {
+                praying: '🙏',
+                answered: '✅',
+                archived: '📁'
+            };
+
+            const categoryIcons = {
+                health: '🏥',
+                family: '👨‍👩‍👧‍👦',
+                work: '💼',
+                spiritual: '✨',
+                praise: '🎉',
+                other: '📝'
+            };
+
+            const date = new Date(prayer.dateAdded).toLocaleDateString();
+            const cardClass = prayer.status === 'answered' ? 'answered' : prayer.category === 'praise' ? 'praise' : '';
+
+            return `
+                <div class="prayer-card ${cardClass}">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="status-icon">${statusIcons[prayer.status]}</span>
+                            ${prayer.memberName}
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-icon btn-secondary" onclick="editPrayer('${prayer.id}')" title="Edit">
+                                ✏️
+                            </button>
+                            <button class="btn btn-icon btn-secondary" onclick="deletePrayer('${prayer.id}')" title="Delete">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="prayer-text">${prayer.requestText}</div>
+                    <div class="card-meta">
+                        <span class="tag">${categoryIcons[prayer.category]} ${prayer.category}</span>
+                        <span class="date">Added: ${date}</span>
+                        ${prayer.answerDate ? `<span class="date">Answered: ${new Date(prayer.answerDate).toLocaleDateString()}</span>` : ''}
+                    </div>
+                    ${prayer.notes ? `<div style="margin-top: 1rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: 0.5rem; font-size: 0.875rem;"><strong>Notes:</strong> ${prayer.notes}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function editPrayer(id) {
+            const prayer = prayers.find(p => p.id === id);
+            if (!prayer) return;
+
+            currentEditId = id;
+            
+            // Populate edit form
+            document.getElementById('editMemberName').value = prayer.memberName;
+            document.getElementById('editCategory').value = prayer.category;
+            document.getElementById('editRequestText').value = prayer.requestText;
+            document.getElementById('editStatus').value = prayer.status;
+            document.getElementById('editNotes').value = prayer.notes || '';
+            document.getElementById('editAnswerDate').value = prayer.answerDate || '';
+
+            // Update datalist for edit form
+            updateEditMembersList();
+            
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function deletePrayer(id) {
+            if (confirm('Are you sure you want to delete this prayer request?')) {
+                prayers = prayers.filter(p => p.id !== id);
+                savePrayers();
+                renderPrayers();
+                updateStats();
+                showNotification('Prayer request deleted successfully!');
+            }
+        }
+
+        function updateMembersList() {
+            const datalist = document.getElementById('membersList');
+            const uniqueMembers = [...new Set(prayers.map(p => p.memberName))];
+            datalist.innerHTML = uniqueMembers.map(name => `<option value="${name}">`).join('');
+        }
+
+        function updateEditMembersList() {
+            const datalist = document.getElementById('editMembersList');
+            const uniqueMembers = [...new Set(prayers.map(p => p.memberName))];
+            datalist.innerHTML = uniqueMembers.map(name => `<option value="${name}">`).join('');
+        }
+
+        function updateStats() {
+            const total = prayers.length;
+            const active = prayers.filter(p => p.status === 'praying').length;
+            const answered = prayers.filter(p => p.status === 'answered').length;
+            const praises = prayers.filter(p => p.category === 'praise').length;
+
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('activePrayers').textContent = active;
+            document.getElementById('answeredPrayers').textContent = answered;
+            document.getElementById('praisesCount').textContent = praises;
+        }
+
+        function savePrayers() {
+            localStorage.setItem('prayers', JSON.stringify(prayers));
+        }
+
+        function showQuickAdd() {
+            document.getElementById('quickAddForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('memberName').focus();
+        }
+
+        function showSettings() {
+            document.getElementById('settingsModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.add('hidden');
+            });
+            currentEditId = null;
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('darkMode', isDarkMode.toString());
+            
+            if (isDarkMode) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+        }
+
+        function exportData() {
+            const data = {
+                prayers: prayers,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prayer-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('Data exported successfully!');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.prayers && Array.isArray(data.prayers)) {
+                        if (confirm('This will replace all existing data. Are you sure?')) {
+                            prayers = data.prayers;
+                            savePrayers();
+                            updateMembersList();
+                            renderPrayers();
+                            updateStats();
+                            closeModal();
+                            showNotification('Data imported successfully!');
+                        }
+                    } else {
+                        showNotification('Invalid file format!', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Error reading file!', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function clearAllData() {
+            if (confirm('This will permanently delete all prayer requests. Are you sure?')) {
+                prayers = [];
+                savePrayers();
+                renderPrayers();
+                updateStats();
+                closeModal();
+                showNotification('All data cleared successfully!');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('data:application/javascript;base64,Ly8gU2ltcGxlIFNlcnZpY2UgV29ya2VyIGZvciBvZmZsaW5lIGZ1bmN0aW9uYWxpdHkKY29uc3QgQ0FDSEVfTkFNRSA9ICdwcmF5ZXItdHJhY2tlci12MSc7CmNvbnN0IHVybHNUb0NhY2hlID0gWycvJ107CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2luc3RhbGwnLCBmdW5jdGlvbihldmVudCkgewogIGV2ZW50LndhaXRVbnRpbCgKICAgIGNhY2hlcy5vcGVuKENBQ0hFX05BTUUpCiAgICAgIC50aGVuKGZ1bmN0aW9uKGNhY2hlKSB7CiAgICAgICAgcmV0dXJuIGNhY2hlLmFkZEFsbCh1cmxzVG9DYWNoZSk7CiAgICAgIH0pCiAgKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZnVuY3Rpb24oZXZlbnQpIHsKICBldmVudC5yZXNwb25kV2l0aCgKICAgIGNhY2hlcy5tYXRjaChldmVudC5yZXF1ZXN0KQogICAgICAudGhlbihmdW5jdGlvbihyZXNwb25zZSkgewogICAgICAgIGlmIChyZXNwb25zZSkgewogICAgICAgICAgcmV0dXJuIHJlc3BvbnNlOwogICAgICAgIH0KICAgICAgICByZXR1cm4gZmV0Y2goZXZlbnQucmVxdWVzdCk7CiAgICAgIH0pCiAgKTsKfSk7')
+                .then(function(registration) {
+                    console.log('SW registered: ', registration);
+                }).catch(function(registrationError) {
+                    console.log('SW registration failed: ', registrationError);
+                });
+            });
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'k':
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                        break;
+                    case 'n':
+                        e.preventDefault();
+                        showQuickAdd();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Weekly reminder notification
+        function checkWeeklyReminder() {
+            const lastReminder = localStorage.getItem('lastWeeklyReminder');
+            const oneWeek = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+            const now = Date.now();
+
+            if (!lastReminder || (now - parseInt(lastReminder)) > oneWeek) {
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    const activePrayers = prayers.filter(p => p.status === 'praying').length;
+                    if (activePrayers > 0) {
+                        new Notification('Prayer Tracker Reminder', {
+                            body: `You have ${activePrayers} active prayer requests to review.`,
+                            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0iIzYzNjZmMSI+PHBhdGggZD0iTTI0IDIuNWM2LjMzNiAwIDExLjQgMi40NiAxNS4wODggNS4zNTMgMy42ODggMi44OTMgNS45MTIgNi40NDcgNS45MTIgMTAuMTQ3IDAgMy4xOC0xLjA4MyA2LjA2My0yLjg5IDguNTgtMS44MDcgMi41MTctNC4yODEgNC41MTctNy4wNiA1LjkxdjMuNDdjMCAuODI4LS42NzIgMS41LTEuNSAxLjVoLTlhMS41IDEuNSAwIDAgMS0xLjUtMS41di0zLjQ3Yy0yLjc3OS0xLjM5My01LjI1My0zLjM5My03LjA2LTUuOTFDMy4xODMgMjQuMDYzIDIgMjEuMTggMiAxOGMwLTMuNyAyLjIyNC03LjI1NCA1LjkxMi0xMC4xNDdDMTIuNiA0Ljk2IDE3LjY2NCAyLjUgMjQgMi41eiIgZmlsbD0iIzYzNjZmMSIvPjwvc3ZnPg=='
+                        });
+                    }
+                }
+                localStorage.setItem('lastWeeklyReminder', now.toString());
+            }
+        }
+
+        // Check for weekly reminder on app load
+        setTimeout(checkWeeklyReminder, 2000);
+    </script>
+</body>
+</html>
